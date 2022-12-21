@@ -6,7 +6,7 @@ Number_VMs = 0 #number VMs to launch
 IP_RANGE= "192.168.56" #Change me if needed!
 PUBLIC_KEY_PATH = "~/.ssh/id_rsa.pub" #Change me if needed!
 READ_PUBLIC_KEY = File.read(File.expand_path(PUBLIC_KEY_PATH)).strip
-PROVISION_FILES_PATH="/home/vagrant/provision_files"
+PROVISION_FILES_PATH="v"
 
 #P === rovisioning VM - New! =========================================================
 PROVISION_VM = true                 #Change me if needed!
@@ -80,5 +80,8 @@ $provision_x = <<-SHELL
   # efetuar peirmeiro o "gcloud init" manualmente, seguindo os passos lá indicados e depois executar o comando
   # seguinte também manualmente,
   # depois verificar que no GKE que o cluster foi corretamente criado.
+  # ansible-playbook -i /home/vagrant/provision_files/inventory/gcp.yml/home/vagrant/provision_files/create-gke-cluster.yml
+
+  # comando a usar mais tarde:
   # ansible-playbook -i ${PROVISION_FILES_PATH}/inventory/gcp.yml ${PROVISION_FILES_PATH}/create-gke-cluster.yml
 SHELL
