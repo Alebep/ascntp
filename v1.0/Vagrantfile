@@ -6,6 +6,7 @@ Number_VMs = 0 #number VMs to launch
 IP_RANGE= "192.168.56" #Change me if needed!
 PUBLIC_KEY_PATH = "~/.ssh/id_rsa.pub" #Change me if needed!
 READ_PUBLIC_KEY = File.read(File.expand_path(PUBLIC_KEY_PATH)).strip
+PROVISION_FILES_PATH="/home/vagrant/provision_files"
 
 #P === rovisioning VM - New! =========================================================
 PROVISION_VM = true                 #Change me if needed!
@@ -38,32 +39,41 @@ Vagrant.configure("2") do |config|
 end
 
 $provision_x = <<-SHELL
-  echo " === [ALL|Task 0]: Disable firewall"
+  echo " === [PROVISIONER|Task 0]: Disable firewall =========================================================="
   ufw disable
 
-  echo " === [ALL|Task 1]: Configure SSH Public Key authentication"
+  echo " === [PROVISIONER|Task 1]: Configure SSH Public Key authentication ==================================="
   echo "#{READ_PUBLIC_KEY}" >> /home/vagrant/.ssh/authorized_keys
   sed -i 's/#PubkeyAuthentication yes/PubkeyAuthentication yes/g' /etc/ssh/sshd_config
   sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
   systemctl restart sshd
 
-  echo " === [ALL|Task 2]: Install vim"
+  echo " === [PROVISIONER|Task 2]: Install vim ==============================================================="
   apt-get update
   apt-get install -y vim 
 
-  echo " === [ALL|Task 3]: Install ansible"
+  echo " === [PROVISIONER|Task 3]: Install ansible ==========================================================="
   apt-get install -y ansible
 
-  echo " === [ALL|Task 4]: Install GCP Cli"
+  echo " === [PROVISIONER|Task 4]: Install GCP Cli ==========================================================="
   apt-get install apt-transport-https ca-certificates gnupg
   echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
     
   curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
   apt-get update && apt-get install google-cloud-cli
 
-  echo " === [ALL|Task 4]: Install pip"
+  echo " === [PROVISIONER|Task 4]: Install pip ==============================================================="
   apt-get install -y pip
 
-  echo " === [ALL|Task 4]: Install google.auth"
+  echo " === [PROVISIONER|Task 5]: Install google.auth ======================================================="
   pip install requests google-auth
+
+  echo " === [PROVISIONER|Task 6]: Install google plugins ===================================================="
+  apt-get install -y google-cloud-sdk-gke-gcloud-auth-plugin
+
+  echo " === [PROVISIONER|Task 7]: Install kubectl ==========================================================="
+  apt-get install kubectl
+
+  echo " === [PROVISIONER|Task 8]: Create cluster ============================================================"
+  ansible-playbook -i ${PROVISION_FILES_PATH}/inventory/gcp.yml ${PROVISION_FILES_PATH}/create-gke-cluster.yml
 SHELL
