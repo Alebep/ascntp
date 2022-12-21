@@ -75,5 +75,10 @@ $provision_x = <<-SHELL
   apt-get install kubectl
 
   echo " === [PROVISIONER|Task 8]: Create cluster ============================================================"
-  ansible-playbook -i ${PROVISION_FILES_PATH}/inventory/gcp.yml ${PROVISION_FILES_PATH}/create-gke-cluster.yml
+  # ainda não está a funcionar, pois é necessário ultrapassar o problema do gcloud init necessitar de acesso
+  # ao browser
+  # efetuar peirmeiro o "gcloud init" manualmente, seguindo os passos lá indicados e depois executar o comando
+  # seguinte também manualmente,
+  # depois verificar que no GKE que o cluster foi corretamente criado.
+  # ansible-playbook -i ${PROVISION_FILES_PATH}/inventory/gcp.yml ${PROVISION_FILES_PATH}/create-gke-cluster.yml
 SHELL
