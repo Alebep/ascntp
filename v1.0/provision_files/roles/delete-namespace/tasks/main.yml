@@ -1,0 +1,10 @@
+---
+# Undeploy namespace
+- name: Delete a k8s namespace
+  k8s:    
+    state: absent    
+    definition:      
+      apiVersion: v1      
+      kind: Namespace
+      metadata:        
+        name: "{{ namespace }}" 

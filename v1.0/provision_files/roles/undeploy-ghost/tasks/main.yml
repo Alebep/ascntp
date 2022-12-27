@@ -1,0 +1,22 @@
+---
+# Delete Service for exposing ghost
+- name: Create ghost Service
+  k8s:
+    state: absent
+    definition:      
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: ghost-service
+        namespace: "{{ namespace }}"
+
+# Undeployment for ghost
+- name: ghost undeploy
+  k8s:
+    state: absent
+    definition:      
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: ghost
+        namespace: "{{ namespace }}"        

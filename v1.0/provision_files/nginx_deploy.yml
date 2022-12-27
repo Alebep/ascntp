@@ -1,8 +1,0 @@
----
-- name: deploy application
-  hosts: localhost  
-  gather_facts: false  
-  environment:    
-    GOOGLE_CREDENTIALS: "{{ gcp_cred_file }}"   
-  roles:    
-    - nginx_deploy

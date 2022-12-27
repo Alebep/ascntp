@@ -12,6 +12,11 @@
     project: "{{ gcp_project }}"
     auth_kind: "{{ gcp_auth_kind }}"
     service_account_file: "{{ gcp_cred_file }}"
+    addons_config:
+      horizontal_pod_autoscaling:
+        disabled: false
+      http_load_balancing:
+        disabled: false   
     state: present
   register: cluster
   until: "cluster is not failed"
@@ -36,6 +41,10 @@
       machine_type: "{{ gcp_machine_type }}"
       image_type: "{{ gcp_image_type }}"
       disk_size_gb: "{{ gcp_disk_size_gb }}"
+    autoscaling:
+      enabled: "yes"
+      min_node_count: 2
+      max_node_count: 10
     location: "{{ gcp_zone }}"
     project: "{{ gcp_project }}"
     auth_kind: "{{ gcp_auth_kind }}"

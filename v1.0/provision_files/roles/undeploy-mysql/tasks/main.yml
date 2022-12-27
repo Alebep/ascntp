@@ -1,0 +1,15 @@
+---
+- name: Undeploy mysql POD
+  k8s:    
+    state: absent    
+    definition:      
+      apiVersion: v1      
+      kind: Pod      
+      metadata:        
+        name: "{{ app }}"        
+        namespace: "{{ namespace }}"        
+        labels:          
+          app: "{{ app }}"      
+      spec:        
+        containers:          
+          - name: "{{ app }}"
