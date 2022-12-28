@@ -15,12 +15,12 @@
       spec:
         containers:
         - name: mysql
-          image: mysql:latest
+          image:  mysql:8.0
           env: # The variables below could be set on a ConfigMap object
           - name: MYSQL_ALLOW_EMPTY_PASSWORD
             value: "true"
           - name: MYSQL_HOST
-            value: localhost
+            value: mysql-service
           - name: MYSQL_DATABASE
             value: swap
           - name: MYSQL_USER

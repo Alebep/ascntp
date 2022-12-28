@@ -1,6 +1,6 @@
 ---
 # Delete Service for exposing ghost
-- name: Create ghost Service
+- name: Delete ghost Service
   k8s:
     state: absent
     definition:      
