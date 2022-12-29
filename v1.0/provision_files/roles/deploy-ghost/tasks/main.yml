@@ -62,3 +62,8 @@
             # Optional field
             # By default and for convenience, the Kubernetes control plane will allocate a port from a range (default: 30000-32767)
             nodePort: 30007 # a static port assigned on each the node
+
+
+
+# cloud container clusters get-credentials ascn-cluster --zone us-central1-a --project ascnghostgrupotp42 \
+# && kubectl port-forward --namespace mysql $(kubectl get pod --namespace mysql --selector="app=ghost" --output jsonpath='{.items[0].metadata.name}') 8080:2368
