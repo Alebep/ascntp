@@ -1,5 +1,5 @@
 ---
-# CREATE NAMESPACE
+# create namespace
 - name: Create a k8s namespace
   k8s:    
     state: present    

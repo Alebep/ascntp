@@ -1,6 +1,5 @@
 ---
 # Delete Persistence volumes
-
 - name: Delete a PV Claim
   k8s:
     state: absent
@@ -34,9 +33,9 @@
 - name: Delete a PV
   k8s:
     state: absent
-    definition:      
+    definition:
       apiVersion: storage.k8s.io/v1
       kind: StorageClass
       metadata:
         name: local-storage
-        namespace: "{{ namespace }}"          
+        namespace: "{{ namespace }}"

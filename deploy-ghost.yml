@@ -7,7 +7,6 @@
   environment:    
     GOOGLE_CREDENTIALS: "{{ gcp_cred_file }}"   
   roles:
-    - create-namespace
-    - create-persistence-volumes
-    - deploy-mysql
-    - deploy-ghost
+    - { role: deploy-mysql, tags: mysql }
+    - { role: deploy-ghost, tags: ghost }
+    - { role: create-firewall-rule, tags: ["ghost", "firewall"] }

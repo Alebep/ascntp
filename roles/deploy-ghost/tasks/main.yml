@@ -3,12 +3,12 @@
 - name: ghost deploy
   k8s:
     state: present
-    definition:      
+    definition:
       apiVersion: apps/v1
       kind: Deployment
       metadata:
         name: ghost
-        namespace: "{{ namespace }}"        
+        namespace: "{{ namespace }}"
         labels:
           app: ghost
       spec:
@@ -23,25 +23,44 @@
           spec:
             containers:
             - name: ghost
-              image: ghost:4-alpine
+              image: "{{ ghost_image }}"
+              resources:
+                requests:
+                  cpu: "250m"
               env:
+              - name: database__client
+                value: "{{ database_client }}"  
+                # value: mysql  
               - name: database__connection__host
                 value: mysql-service
               - name: database__connection__database
-                value: swap
+                value: ghost_db
               - name: database__connection__user
-                value: swapuser
+                value: ghost_user
               - name: database__connection__password
                 value: "123456" # Use secret object in real usage
+              - name: url
+                value: http://{{ ghost_ip }}:{{ ghost_port }}
               - name: MIGRATE
                 value: "true"
+              - name: NODE_ENV
+                value: "{{ ghost_mode }}"
               ports:
               - containerPort: 2368
+            
+            #   volumeMounts:
+            #   - name: sqlite3-persistent-storage
+            #     mountPath: /var/lib/ghost/versions/5.14.1/content/data/
+            # volumes:
+            # - name: sqlite3-persistent-storage
+            #   persistentVolumeClaim:
+            #         claimName: sqlite3-pv-claim
+
 
 # Create Service for exposing ghost
 - name: Create ghost Service
   k8s:
-    state: present    
+    state: present
     definition:      
       apiVersion: v1
       kind: Service
@@ -63,7 +82,29 @@
             # By default and for convenience, the Kubernetes control plane will allocate a port from a range (default: 30000-32767)
             nodePort: 30007 # a static port assigned on each the node
 
-
+- name: Get ghost POD name
+  shell: sed -i '/ghost_pod_name/d' inventory/gcp.yml && kubectl get pods -n {{ namespace }} | grep "ghost-" | awk '{print "  " "ghost_pod_name" ":" " " $1}' >> inventory/gcp.yml
+  #shell: kubectl cp mysql/ghost-64dd74d5f7-cdgxd:/var/lib/ghost/content/data/ghost.db ./ghost.db
+  #shell: echo "UPDATE users SET name = 'ascn', password='ascn123', slug='ascn', email='ascn@example.com' WHERE id=1;" > fich.sql
+  #shell: sqlite3 ghost.db < fich.sql
+  #shell: kubectl cp ./ghost.db mysql/ghost-64dd74d5f7-cdgxd:/var/lib/ghost/content/data/ghost.db
 
 # cloud container clusters get-credentials ascn-cluster --zone us-central1-a --project ascnghostgrupotp42 \
-# && kubectl port-forward --namespace mysql $(kubectl get pod --namespace mysql --selector="app=ghost" --output jsonpath='{.items[0].metadata.name}') 8080:2368
+# && kubectl port-forward --namespace mysql $(kubectl get pod --namespace mysql --selector="app=ghost" --output jsonpath='{.items[0].metadata.name}') 8080:2368\
+
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  labels:
+    app: ghost
+  name: ghost-hpa
+  namespace: "{{ namespace }}"
+spec:
+  maxReplicas: 100
+  minReplicas: 1
+  targetCPUUtilizationPercentage: 80
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: ghost

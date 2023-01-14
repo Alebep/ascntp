@@ -7,7 +7,7 @@
       apiVersion: v1      
       kind: Pod      
       metadata:
-        name: "{{ app }}"
+        name: mysql
         namespace: "{{ namespace }}"        
         labels:
           app: mysql
@@ -15,16 +15,16 @@
       spec:
         containers:
         - name: mysql
-          image:  mysql:8.0
+          image: "{{ mysql_image }}"
           env: # The variables below could be set on a ConfigMap object
           - name: MYSQL_ALLOW_EMPTY_PASSWORD
             value: "true"
           - name: MYSQL_HOST
             value: mysql-service
           - name: MYSQL_DATABASE
-            value: swap
+            value: ghost_db
           - name: MYSQL_USER
-            value: swapuser
+            value: ghost_user
           - name: MYSQL_PASSWORD
             value: "123456" # Use Secret object in real usage
           ports:
@@ -56,3 +56,9 @@
         ports:
           - targetPort: 3306 # port that containers are listening on
             port: 3306 # port number exposed internally in the cluster
+
+
+  # "database": {
+  #   "client": "sqlite3",
+  #   "connection": {
+  #     "filename": "/var/lib/ghost/content/data/ghost.db"

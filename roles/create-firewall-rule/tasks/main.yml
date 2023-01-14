@@ -1,0 +1,19 @@
+---
+# create firewall rule for app port
+- name: Create firewall rule
+  google.cloud.gcp_compute_firewall:
+    state: present
+    name: ghost-port
+    scopes:
+    - https://www.googleapis.com/auth/cloud-platform
+    priority: 0
+    direction: ingress
+    allowed:
+    - ip_protocol: tcp
+      ports:
+      - '{{ ghost_port }}'
+    source_ranges:
+      0.0.0.0/0
+    project: "{{ gcp_project }}"
+    auth_kind: "{{ gcp_auth_kind }}"
+    service_account_file: "{{ gcp_cred_file }}"

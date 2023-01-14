@@ -5,4 +5,7 @@
   hosts: localhost
   gather_facts: false
   roles:
-      - gke_cluster_create
+    - { role: gke_cluster_create, tags: cluster_create }
+    - { role: get-cluster-data, tags: cluster_data }
+    - { role: create-namespace, tags: namespace }
+    - { role: create-persistence, tags: persistence }

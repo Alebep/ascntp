@@ -2,7 +2,7 @@
 
 - name: Destroy Google Kubernetes Engine Cluster
   gcp_container_cluster:
-    name: ascn-cluster
+    name: "{{ cluster_name }}"
     location: "{{ gcp_zone }}"
     project: "{{ gcp_project }}"
     auth_kind: "{{ gcp_auth_kind }}"
@@ -26,5 +26,5 @@
 - name: Verify that the command succeeded
   assert:
     that:
-    - '''ascn-cluster'' not in "{{ results[''resources''] | map(attribute=''name'')
+    - '''"{{ cluster_name }}"'' not in "{{ results[''resources''] | map(attribute=''name'')
       | list }}"'

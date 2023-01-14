@@ -39,7 +39,7 @@
               - key: kubernetes.io/hostname
                 operator: In
                 values:
-                - gke-ascn-cluster-default-pool-9759060d-dbkk
+                - "{{ gcp_node_worker_1 }}"
 
 - name: Create a PV_WORKER2
   k8s:
@@ -68,9 +68,9 @@
               - key: kubernetes.io/hostname
                 operator: In
                 values:
-                - gke-ascn-cluster-default-pool-9759060d-lzrt
+                - "{{ gcp_node_worker_2 }}"
 
-- name: Create a PV Claim
+- name: Create a MySQL PV Claim
   k8s:
     state: present    
     definition:      
@@ -78,6 +78,23 @@
       kind: PersistentVolumeClaim
       metadata:
         name: mysql-pv-claim
+        namespace: "{{ namespace }}"        
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        storageClassName: local-storage
+        resources:
+          requests:
+            storage: 20Gi
+
+- name: Create a SQLITE3 PV Claim
+  k8s:
+    state: present
+    definition:      
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
+        name: sqlite3-pv-claim
         namespace: "{{ namespace }}"        
       spec:
         accessModes:

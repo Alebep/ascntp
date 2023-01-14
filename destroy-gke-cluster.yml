@@ -5,4 +5,7 @@
   hosts: localhost
   gather_facts: false
   roles:
-  - gke_cluster_destroy
+    - delete-persistence
+    - delete-namespace
+    - delete-firewall-rule
+    - gke_cluster_destroy
