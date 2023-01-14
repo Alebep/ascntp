@@ -14,18 +14,17 @@ all:
   gcp_disk_size_gb: 100                # Can be changed if necessary
   gcp_initial_node_count: 2            # Number of nodes to create. Can be changed if necessary
 
-  gcp_node_worker_1: dfsdf
-  gcp_node_worker_2: dfsdf
 
   # APP variables
-  ghost_ip: 192.168.1.1     # Needs to be updated
   ghost_port: 30007         # Needs to be updated
 
 
   # Additional variables
-  
+
+  #mysql_image: mysql:8.0
   mysql_image: mysql:8
   ghost_image: ghost:5.14.1
+  # ghost_image: ghost:4-alpine
 
   mysql_app_name: mysql
   ghost_app_name: ghost
@@ -33,6 +32,9 @@ all:
   database_client: sqlite3
   ghost_mode: development
 
-# senha ascn123 = $2a$12$Af6SKH97ydTVvrKB5YWIVeBlq7lI0GltoFUv3k2b/sZlJX/64MsUC
-# UPDATE SQL STRING
-# update `users` set `name` = 'Me and My monkey', `slug` = 'me', `password` = '$2a$10$FdfHSL725talekW7CG0MaOzZjzSwmnszn7gLDILSYFTIAQfk.flpK', `email` = 'ascn@example2.com', `profile_image` = NULL, `cover_image` = NULL, `bio` = NULL, `website` = NULL, `location` = NULL, `facebook` = NULL, `twitter` = NULL, `accessibility` = NULL, `status` = 'active', `locale` = NULL, `visibility` = 'public', `meta_title` = NULL, `meta_description` = NULL, `tour` = NULL, `last_seen` = NULL, `comment_notifications` = true, `free_member_signup_notification` = true, `paid_subscription_started_notification` = true, `paid_subscription_canceled_notification` = false, `created_at` = '2023-01-14 16:22:21', `created_by` = '1', `updated_at` = '2023-01-14 16:43:21', `updated_by` = '1' where `id` = '1' - SQLITE_READONLY: attempt to write a readonly database
+
+  gcp_node_worker_1: gke-ascn-cluster-rui-default-pool-c0dca2d6-7q1j
+  gcp_node_worker_2: gke-ascn-cluster-rui-default-pool-c0dca2d6-nqcs
+  ghost_ip: 35.225.38.167
+  ghost_pod_name: ghost-c674f7746-rls2n
+  ghost_pod_name: ghost-c9b9dc969-l9f8z
