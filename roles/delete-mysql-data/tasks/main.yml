@@ -1,7 +1,0 @@
----
-- name: delete data from /mnt/data
-  shell: gcloud compute ssh --command "sudo rm -rf /mnt/data/*" --zone "us-central1-a" "{{ gcp_node_worker_1 }}"  --project "{{ gcp_project }}" && \ 
-         gcloud compute ssh --command "sudo rm -rf /mnt/data/*" --zone "us-central1-a" "{{ gcp_node_worker_2 }}"  --project "{{ gcp_project }}"
-  when: delete_data
-  ignore_errors: true
-

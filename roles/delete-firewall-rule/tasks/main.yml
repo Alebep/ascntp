@@ -1,9 +1,0 @@
----
-# Delete firewall rule
-- name: Delelte firewall rule
-  google.cloud.gcp_compute_firewall:
-    state: absent    
-    name: ghost-port
-    project: "{{ gcp_project }}"
-    auth_kind: "{{ gcp_auth_kind }}"
-    service_account_file: "{{ gcp_cred_file }}"
